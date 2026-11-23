@@ -1,0 +1,21 @@
+name: Windows Build
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ilammy/msvc-dev-cmd@v1
+      - name: Configure
+        run: cmake -S . -B build -G "Visual Studio 17 2022" -A x64
+      - name: Build
+        run: cmake --build build --config Release --parallel 2
+      - uses: actions/upload-artifact@v4
+        with:
+          name: SSLoader-Windows-V1
+          path: |
+            build/SSLoader_artefacts/Release/Standalone/*.exe
+            build/SSLoader_artefacts/Release/VST3/*.vst3/**
